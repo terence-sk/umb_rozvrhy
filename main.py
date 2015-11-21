@@ -5,7 +5,7 @@
 import itertools
 import os
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from lxml import etree
 
 
@@ -25,28 +25,40 @@ def add_days_of_week_xml(root):
 #class je rezervovane pythonom, musi to byt clazz :)
 def add_class_to_xml(root, clazz):
 
-    hodina = etree.Element('hodina')
-    hodina.text = clazz[0]
+    den = None
 
-    vyucujuci = etree.Element('vyucujuci')
-    vyucujuci.text = clazz[1]
+    if not clazz[3] == None:
+        den = root.find(clazz[3]) #TODO co v pripadoch ked chyba den.
+    else:
+        print "---- FAIL!!! CHYBA DEN ----"
+        return
 
-    ucebna = etree.Element('ucebna')
-    ucebna.text = clazz[2]
+    if not clazz[0] == None:
+        hodina = etree.Element('hodina')
+        hodina.text = clazz[0]
+        den.append(hodina)
 
-    den = root.find(clazz[3]) #TODO co v pripadoch ked chyba den.. omg, treba prerobit tak aby den bralo z <tr>
+    if not clazz[1] == None:
+        vyucujuci = etree.Element('vyucujuci')
+        vyucujuci.text = clazz[1]
+        den.append(vyucujuci)
 
-    zaciatok = etree.Element('zaciatok')
-    zaciatok.text = clazz[4]
+    if not clazz[2] == None:
+        ucebna = etree.Element('ucebna')
+        ucebna.text = clazz[2]
+        den.append(ucebna)
 
-    trvanie = etree.Element('trvanie')
-    trvanie.text = clazz[5]
+    if not clazz[4] == None:
+        zaciatok = etree.Element('zaciatok')
+        zaciatok.text = clazz[4]
+        den.append(zaciatok)
 
-    den.append(hodina)
-    den.append(vyucujuci)
-    den.append(ucebna)
-    den.append(zaciatok)
-    den.append(trvanie)
+    if not clazz[5] == None:
+        trvanie = etree.Element('trvanie')
+        trvanie.text = clazz[5]
+        den.append(trvanie)
+
+    root.append(den)
 
 
 def get_class_length(title):
@@ -107,19 +119,28 @@ def get_lessons_of_class(url):
     for ucebna in soup.find_all("font", {'class': 'Ucebna'}):
         ucebne.append(ucebna.text)
 
-    hodiny = soup.find_all("td")
+    ciste_trka = soup.find_all("tr", {'class': False})
+    ciste_trka = ciste_trka[1:-1]
+    hlavicka_dni = ""
 
-    #TODO Zober vsetky <tr>
-    #TODO Zober td class hlavicka dni text
-    #TODO Zober vsetky td... to uz mam vlastne hotove
+    for trko in ciste_trka:
+        if trko != '\n' and trko.find("td", {'class': 'HlavickaDni'}) is not None:
+                hlavicka_dni = trko.find("td", {'class': 'HlavickaDni'})['title']
 
+                # TODO od tadeto az pred return bude vo for cykle na hladanie nazvov dni
 
-    # podla bgcolor viem ci je hodina ale volnahodina
-    for hodinaInfo in hodiny:
-        if hodinaInfo.has_attr('bgcolor'): # ak ma bgcolor nie je to Volna hodina ani nic ine
-            pocHod.append(get_class_length(hodinaInfo))
-            dni.append(get_class_day(hodinaInfo))
-            zacinaHod.append(get_class_start(hodinaInfo))
+                hodiny = trko.find("td", {'class': 'HlavickaDni'}).parent.find_all("td") #vsetky hodiny v ramci toho dna
+
+                #TODO Zober vsetky <tr>
+                #TODO Z nich zober len take co maju ako child td class hlavicka dni z toho vezmi text
+                #TODO Zober vsetky td... to uz mam vlastne hotove
+
+                # podla bgcolor viem ci je hodina alebo volnahodina
+                for hodinaInfo in hodiny:
+                    if hodinaInfo.has_attr('bgcolor'):
+                        pocHod.append(get_class_length(hodinaInfo))
+                        dni.append(hlavicka_dni)
+                        zacinaHod.append(get_class_start(hodinaInfo))
 
     # Ak aj ucebna alebo meno vyucujuceho chyba, dlzka vsetkych zoznamov bude tak ci tak rovnaka
     # avsak v pripade "Nadpis", ten bude vzdy len jeden, preto musime pouzit "izip_longest"
@@ -148,8 +169,8 @@ for link in soup.find_all("a"):
 urls = urls[1:10] #TODO [1:-1]
 
 lessons = []
-for mojaUrl in urls:
-    lessons.append(get_lessons_of_class(mojaUrl))
+#for mojaUrl in urls:
+lessons.append(get_lessons_of_class(urls[1])) #TODO mojaUrl
 
 #spravime si zlozku na rozvrhy
 try:
