@@ -168,24 +168,12 @@ def get_lessons_of_class(url):
     # ktory zo zoznamu kratsej dlzky, spravi dlhsi a doplni tam "None". keby to nespravim, kazdy
     # zoznam skrati na jednu polozku a to by nam chybali hodiny...
 
+    # No a navyse je potrebne odstranit predmet ktory ma v nazve tri hviezdy pretoze ten ma v sebe
+    # data o dalsich hodinach a tie sa nedaju normalne sparsovat, teda ich odstranim. Keby to neodstranim
+    # hodiny sa mozu posunut a byt v nespravnych dnoch a mat zle ucebne
+    if u'***' in predmety:
+        predmety.remove(u'***')
     mojList = list(itertools.izip_longest(predmety, ucitelia, ucebne, dni, zacinaHod, pocHod, nadpis))
-
-    # pocetNone = 0
-    # indexPola = 0
-    # for q in mojList:
-    #     indexPola += 1
-    #     for w in q:
-    #         if w is None:
-    #             pocetNone += 1
-    #     if pocetNone == 6:
-    #         mojList.remove(q)
-    #         predmety = np.delete(predmety, indexPola)
-    #         ucitelia = np.delete(ucitelia, indexPola)
-    #         ucebne = np.delete(ucebne, indexPola)
-    #         indexPola = 0
-    #
-    #     pocetNone = 0
-
 
     return mojList
 
@@ -210,9 +198,9 @@ for link in soup.find_all("a"):
 urls = urls[1:-1]
 
 lessons = []
-#for mojaUrl in urls:
-#    lessons.append(get_lessons_of_class(mojaUrl)) #[urls[6]]
-lessons.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr3306.htm"))
+for mojaUrl in urls:
+    lessons.append(get_lessons_of_class(mojaUrl))
+
 #spravime si zlozku na rozvrhy
 try:
     os.makedirs('rozvrhy')
