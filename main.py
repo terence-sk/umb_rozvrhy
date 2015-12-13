@@ -10,7 +10,7 @@
 # [4]  Zaciatok
 # [5]  Trvanie
 # [6]  Nazov Triedy pre ktoru rozvrh plati
-import numpy as np
+import ODTCreator
 import itertools
 import os
 import requests
@@ -198,8 +198,8 @@ for link in soup.find_all("a"):
 urls = urls[1:-1]
 
 lessons = []
-for mojaUrl in urls:
-    lessons.append(get_lessons_of_class(mojaUrl))
+#for mojaUrl in urls:
+lessons.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm")) #TODO naspat zmeny
 
 #spravime si zlozku na rozvrhy
 try:
@@ -217,6 +217,7 @@ for clazz in lessons:
 
     for x in clazz:
         add_class_to_xml(root, x)
+        ODTCreator.add_values(x[0], x[1], x[2], x[3], x[4], x[5])
 
     f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
     f.write(etree.tostring(root, pretty_print=True))
