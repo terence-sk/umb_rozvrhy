@@ -217,6 +217,7 @@ for clazz in lessons:
 
     for x in clazz:
         add_class_to_xml(root, x)
+        # TODO Vytvorit objekty SchoolClass a zoradit ich podla toho kedy vyuc. hodina zacina
         ODTCreator.add_values(x[0], x[1], x[2], x[3], x[4], x[5])
 
     f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
