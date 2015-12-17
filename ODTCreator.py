@@ -11,7 +11,7 @@ def open_base_file():
 
 
 def save_changes(root):
-    file_output = open('output_odt.xml', 'r+')
+    file_output = open('content.xml', 'r+')
     file_output.write(etree.tostring(root, pretty_print=True))
     file_output.close()
 
@@ -25,30 +25,37 @@ root = open_base_file()
 
 #Prida 3 stringy hodina/vyuc/trieda do tabulky, den urci riadok, zaciatok stlpec, trvanie colspan
 def add_values(hodina, vyucujuci, trieda, den, zaciatok, trvanie):
-
+    # Toto je okej vzdy
     row = root.findall("office:body/office:text/table:table/table:table-row", root.nsmap)[get_day_number(den)]
+
+    num_of_cells_default = 19
+    num_of_cells_real = len(row.findall("table:table-cell", root.nsmap))
+    num_of_cells_in_row_missing = num_of_cells_default - num_of_cells_real
+
+    # ak mame hodinu ktora je natiahnuta cez dve alebo viac hodin, v riadku je menej cells a potom to moze pretiect vyhladavanie
+    zaciatok = str(int(zaciatok)-num_of_cells_in_row_missing)
     cell = row.findall("table:table-cell", root.nsmap)[int(zaciatok)]
-    cell_text = cell.findall("text:p", root.nsmap)[0] #text bude v table cell vzdy iba jeden
+    cell_text = cell.findall("text:p", root.nsmap)[0]  #text bude v table cell vzdy iba jeden
+
+    if int(trvanie) > 1:
+        i = 1
+        while i < int(trvanie) and len(cell.findall("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell")) == 0:
+            next_cell = row.findall("table:table-cell", root.nsmap)[int(zaciatok)+i]
+            row.remove(next_cell)
+            i += 1
+        if len(cell.findall("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell")) == 0:
+            cell.attrib['{urn:oasis:names:tc:opendocument:xmlns:table:1.0}number-columns-spanned'] = trvanie
+            cell.append(etree.Element("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell"))
+
+    if cell_text.text is None:
+                cell_text.text = ''
 
     hodina = unicodedata.normalize('NFKD', hodina).encode('ascii','ignore')
     vyucujuci = unicodedata.normalize('NFKD', vyucujuci).encode('ascii','ignore')
     trieda = unicodedata.normalize('NFKD', trieda).encode('ascii','ignore')
 
-    if cell_text.text is None:
-        cell_text.text = ''
-
     text_final = hodina + vyucujuci + trieda
     cell_text.text += text_final + "___ " # podtrzniky pre oddelenie viacerych hodin v tom istom case
-
-    if int(trvanie) > 1:
-        i = 1
-        while i < int(trvanie):
-            next_cell = row.findall("table:table-cell", root.nsmap)[int(zaciatok)+i]
-            next_cell_text = next_cell.findall("text:p", root.nsmap)[0]
-            if next_cell_text.text is None:
-                next_cell_text.text = ''
-            next_cell_text.text += text_final + "___ "
-            i += 1
 
     save_changes(root)
 
