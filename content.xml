@@ -103,9 +103,20 @@
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="P1">P</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Internetove technologie 2 Brodenec Ivan  PaedDr., PhD. T40F135 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
@@ -122,20 +133,17 @@
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Programovanie 2 Vagac Michal  Mgr., PhD. T40F137 ___ </text:p>
-            <table:covered-table-cell/>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Programovanie 2   ___ </text:p>
-            <table:covered-table-cell/>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Databazove systemy 1 Jackova Jana  Ing., PhD. T40F135 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents">Grecka literatura Jancovic Ivan  doc., PhD. T40F313 ___ </text:p>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents">Grecka literatura Jancovic Ivan  doc., PhD. T40Faul ___ </text:p>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
@@ -154,35 +162,36 @@
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="P1">U</text:p>
           </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
+            <text:p text:style-name="Table_20_Contents">Zaklady a metodologia jazykovedy Odalos Pavol  Dr.h.c.prof.PaedDr., CSc. T40F313 ___ </text:p>
+            <table:covered-table-cell/>
+          </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Semestralny projekt 3 Siladi Vladimir  PaedDr.Mgr., PhD. T40F137 ___ </text:p>
-            <table:covered-table-cell/>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Pocitacove systemy 1 Trajtel Ludovit  doc.Ing., PhD. T40F241 ___ </text:p>
+            <text:p text:style-name="Table_20_Contents">Zaklady a metodologia jazykovedy Chomova Alexandra  Mgr., PhD. T51K039 ___ </text:p>
             <table:covered-table-cell/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Pocitacove systemy 1 Trajtel Ludovit  doc.Ing., PhD. T40F138 ___ </text:p>
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Konstrukcia a programovanie jednoduchych robotov Trhan Peter  Mgr., PhD. T40F140 ___ </text:p>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="3">
+            <text:p text:style-name="Table_20_Contents">Uvod do jazykovedy a literarnej vedy NJ Jurcakova Edita  Mgr., PhD. T51K037 ___ </text:p>
             <table:covered-table-cell/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Databazove systemy 1 Jackova Jana  Ing., PhD. T40F135 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents">Literatura europskeho stredoveku, renesancie a baroka Kubealakova Martina  Mgr., PhD. T40F235 ___ </text:p>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Databazove systemy 1 Jackova Jana  Ing., PhD. T40F341 ___ Timovy projekt 2   ___ </text:p>
+            <text:p text:style-name="Table_20_Contents">Teoria literatury Jancovic Ivan  doc., PhD. T40F352 ___ </text:p>
             <table:covered-table-cell/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Semestralny projekt 3 Siladi Vladimir  PaedDr.Mgr., PhD. T40F137 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
@@ -208,20 +217,10 @@
             <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Algoritmy a struktury udajov 2 Siladi Vladimir  PaedDr.Mgr., PhD. T40F135 ___ </text:p>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Tvorba aplikacii v MATLABe Trhan Peter  Mgr., PhD. T40F137 ___ </text:p>
-            <table:covered-table-cell/>
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Konstrukcia a programovanie jednoduchych robotov Suchy Jozef  prof.Ing., Dr. T40F234 ___ </text:p>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Algoritmy a struktury udajov 2 Siladi Vladimir  PaedDr.Mgr., PhD. T40F137 ___ </text:p>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Pocitacove systemy 1 Trajtel Ludovit  doc.Ing., PhD. T40F138 ___ </text:p>
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
@@ -229,16 +228,32 @@
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Programovanie 2 Vagac Michal  Mgr., PhD. T40F135 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Algoritmy a struktury udajov 2   ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
@@ -254,19 +269,11 @@
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="P1">&#352;</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Kartografia a topografia Weis Karol  RNDr., PhD. T40F356 ___ </text:p>
-            <table:covered-table-cell/>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="3">
-            <text:p text:style-name="Table_20_Contents">Mikroekonomia Mazurova Barbora  Ing., PhD. T40F234 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Algoritmy a struktury udajov 2   ___ </text:p>
-          </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
-            <text:p text:style-name="Table_20_Contents">Kartografia a topografia Weis Karol  RNDr., PhD. T40F356 ___ </text:p>
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
@@ -274,13 +281,32 @@
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Zaklady geoinformatiky Balazovic Lubos  Mgr., PhD. T40F139 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
-          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string" table:number-columns-spanned="2">
-            <text:p text:style-name="Table_20_Contents">Zaklady geoinformatiky Balazovic Lubos  Mgr., PhD. T40F139 ___ </text:p>
-            <table:covered-table-cell/>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
+            <text:p text:style-name="Table_20_Contents"/>
           </table:table-cell>
           <table:table-cell table:style-name="def_5f_table.A2" office:value-type="string">
             <text:p text:style-name="Table_20_Contents"/>

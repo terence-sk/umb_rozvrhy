@@ -199,7 +199,7 @@ urls = urls[1:-1]
 
 lessons = []
 #for mojaUrl in urls:
-lessons.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm")) #TODO naspat zmeny
+lessons.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2985.htm")) #TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
 
 #spravime si zlozku na rozvrhy
 try:
