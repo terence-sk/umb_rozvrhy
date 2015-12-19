@@ -10,7 +10,9 @@
 # [4]  Zaciatok
 # [5]  Trvanie
 # [6]  Nazov Triedy pre ktoru rozvrh plati
+from operator import attrgetter
 import ODTCreator
+import SchoolClass
 import itertools
 import os
 import requests
@@ -31,7 +33,6 @@ def add_days_of_week_xml(root):
     root.append(piatok)
 
 
-#class je rezervovane pythonom, musi to byt clazz :)
 def add_class_to_xml(root, clazz):
 
     if clazz[6] is not None:
@@ -179,7 +180,7 @@ def get_lessons_of_class(url):
 
 
 url = "http://www.pdf.umb.sk/~jsedliak/Public/"
-#tento string je v kazdom linku pre konkretnu triedu, nespracuvame teda ucitelske rozvhy
+# tento string je v kazdom linku pre konkretnu triedu, nespracuvame teda ucitelske rozvhy
 rozvrh_tried = "rozvrh_tr"
 urls = []
 
@@ -197,28 +198,73 @@ for link in soup.find_all("a"):
 # vyhodi sa prvy link ktory neobsahuje konkretnu triedu, ale sablonu pre vsetky triedy
 urls = urls[1:-1]
 
-lessons = []
+cele_rozvrhy_tried = []
 #for mojaUrl in urls:
-lessons.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2985.htm")) #TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
+cele_rozvrhy_tried.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2985.htm")) #TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
 
-#spravime si zlozku na rozvrhy
+# spravime si zlozku na rozvrhy
 try:
     os.makedirs('rozvrhy')
 except OSError:
-    pass #ak uz zlozka existuje da error, ten ignorujeme, chceme zapisat do zlozky
+    pass  # ak uz zlozka existuje da error, ten ignorujeme, chceme zapisat do zlozky
 
-# prvy index je cela hodina aj vyuc aj ucebna
-# druhy index je hodina osobite, vyuc osobite..
-for clazz in lessons:
-    trieda_nazov = clazz[0][6]
+for rozvrh_jednej_triedy in cele_rozvrhy_tried:
+    trieda_nazov = rozvrh_jednej_triedy[0][6]  # 6ty index obsahuje meno triedy ktorej patri rozvrh
     root = etree.Element("rozvrh")
-    root.attrib['Trieda'] = trieda_nazov # 6ty index obsahuje meno triedy ktorej patri rozvrh
+    root.attrib['Trieda'] = trieda_nazov
     add_days_of_week_xml(root)
 
-    for x in clazz:
-        add_class_to_xml(root, x)
-        # TODO Vytvorit objekty SchoolClass a zoradit ich podla toho kedy vyuc. hodina zacina
-        ODTCreator.add_values(x[0], x[1], x[2], x[3], x[4], x[5])
+    vyuc_hodiny = []
+
+    for jedna_hodina_rozvrhu in rozvrh_jednej_triedy:
+        add_class_to_xml(root, jedna_hodina_rozvrhu)
+        vyuc_hodiny.append(SchoolClass.make_class(jedna_hodina_rozvrhu[0],
+                                                  jedna_hodina_rozvrhu[1],
+                                                  jedna_hodina_rozvrhu[2],
+                                                  jedna_hodina_rozvrhu[3],
+                                                  jedna_hodina_rozvrhu[4],
+                                                  jedna_hodina_rozvrhu[5]))
+
+    pondelok = []
+    utorok = []
+    streda = []
+    stvrtok = []
+    piatok = []
+
+    for objekt_hodina in vyuc_hodiny:
+        if objekt_hodina.den == 'pondelok':
+            pondelok.append(objekt_hodina)
+        if objekt_hodina.den == 'utorok':
+            utorok.append(objekt_hodina)
+        if objekt_hodina.den == 'streda':
+            streda.append(objekt_hodina)
+        if objekt_hodina.den == u'štvrtok':
+            stvrtok.append(objekt_hodina)
+        if objekt_hodina.den == 'piatok':
+            piatok.append(objekt_hodina)
+
+    pondelok.sort(key=attrgetter('zaciatok'))
+    utorok.sort(key=attrgetter('zaciatok'))
+    streda.sort(key=attrgetter('zaciatok'))
+    stvrtok.sort(key=attrgetter('zaciatok'))
+    piatok.sort(key=attrgetter('zaciatok'))
+
+    zoznam_dni = [pondelok, utorok, streda, stvrtok, piatok]
+
+    for den in zoznam_dni:
+        for objekt_hodina in den:
+            ODTCreator.add_values(objekt_hodina.hodina,
+                                  objekt_hodina.vyuc,
+                                  objekt_hodina.ucebna,
+                                  objekt_hodina.den,
+                                  objekt_hodina.zaciatok,
+                                  objekt_hodina.trvanie)
+
+    # ODTCreator.align_cells('pondelok')
+    # ODTCreator.align_cells('utorok')
+    # ODTCreator.align_cells('streda')
+    # ODTCreator.align_cells('stvrtok')
+    # ODTCreator.align_cells('piatok')
 
     f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
     f.write(etree.tostring(root, pretty_print=True))

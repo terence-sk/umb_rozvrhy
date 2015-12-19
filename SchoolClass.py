@@ -1,22 +1,20 @@
 class SchoolClass(object):
-    nazovHodiny = ""
+    hodina = ""
     vyuc = ""
     ucebna = ""
     den = ""
     zaciatok = ""
     trvanie = ""
-    nazovTriedy = ""
 
-    def __init__(self, nazovHodiny, vyuc, ucebna, den, zaciatok, trvanie, nazovTriedy):
-        self.nazovHodiny = nazovHodiny
+    def __init__(self, hodina, vyuc, ucebna, den, zaciatok, trvanie):
+        self.hodina = hodina
         self.vyuc = vyuc
         self.ucebna = ucebna
         self.den = den
         self.zaciatok = zaciatok
         self.trvanie = trvanie
-        self.nazovTriedy = nazovTriedy
 
 
-def make_class(nazovHodiny, vyuc, ucebna, den, zaciatok, trvanie, nazovTriedy):
-    sc = SchoolClass(nazovHodiny, vyuc, ucebna, den, zaciatok, trvanie, nazovTriedy)
+def make_class(hodina, vyuc, ucebna, den, zaciatok, trvanie):
+    sc = SchoolClass(hodina, vyuc, ucebna, den, int(zaciatok), trvanie)
     return sc
