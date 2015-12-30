@@ -14,6 +14,7 @@ from operator import attrgetter
 import ODTCreator
 import SchoolClass
 import itertools
+import subprocess
 import os
 import requests
 from bs4 import BeautifulSoup
@@ -200,7 +201,7 @@ urls = urls[1:-1]
 
 cele_rozvrhy_tried = []
 #for mojaUrl in urls:
-cele_rozvrhy_tried.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2985.htm")) #TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
+cele_rozvrhy_tried.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm")) #TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
 
 # spravime si zlozku na rozvrhy
 try:
@@ -260,13 +261,15 @@ for rozvrh_jednej_triedy in cele_rozvrhy_tried:
                                   objekt_hodina.zaciatok,
                                   objekt_hodina.trvanie)
 
-    # ODTCreator.align_cells('pondelok')
-    # ODTCreator.align_cells('utorok')
-    # ODTCreator.align_cells('streda')
-    # ODTCreator.align_cells('stvrtok')
-    # ODTCreator.align_cells('piatok')
+    ODTCreator.align_cells('pondelok')
+    ODTCreator.align_cells('utorok')
+    ODTCreator.align_cells('streda')
+    ODTCreator.align_cells('stvrtok')
+    ODTCreator.align_cells('piatok')
 
     f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
     f.write(etree.tostring(root, pretty_print=True))
     f.close()
 
+# TODO Won't work in Windows
+subprocess.call(['./packNrun.sh'])

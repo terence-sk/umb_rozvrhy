@@ -30,8 +30,8 @@ def add_values(hodina, vyucujuci, trieda, den, zaciatok, trvanie):
     cell = row.findall("table:table-cell", root.nsmap)[zaciatok]
     cell_text = cell.findall("text:p", root.nsmap)[0]  # text bude v table cell vzdy iba jeden
 
-    # if int(trvanie) > 1:
-    #     cell.attrib['{urn:oasis:names:tc:opendocument:xmlns:table:1.0}number-columns-spanned'] = trvanie
+    if int(trvanie) > 1:
+        cell.attrib['{urn:oasis:names:tc:opendocument:xmlns:table:1.0}number-columns-spanned'] = trvanie
 
     # v cell v ktorych nebola ziadna hodina nemaju atribut text vyplneny
     if cell_text.text is None:
@@ -52,6 +52,7 @@ def align_cells(den):
     row = root.findall("office:body/office:text/table:table/table:table-row", root.nsmap)[get_day_number(den)]
     cells_of_day = row.findall("table:table-cell", root.nsmap)
     zaciatok = 0
+    cells_to_remove = []
 
     for cell in cells_of_day:
 
@@ -61,16 +62,10 @@ def align_cells(den):
             trvanie = int(cell.attrib['{urn:oasis:names:tc:opendocument:xmlns:table:1.0}number-columns-spanned'])
         if trvanie is not None and int(trvanie) > 1:
 
-            num_of_cells_default = 19
-            num_of_cells_real = len(row.findall("table:table-cell", root.nsmap))
-            num_of_cells_in_row_missing = num_of_cells_default - num_of_cells_real
-
-            zaciatok -= num_of_cells_in_row_missing
-
             # odstranujeme cells podla toho cez kolko hodin sa vyucovanie natiahne
             while i < int(trvanie) and len(cell.findall("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell")) == 0:
                 next_cell = row.findall("table:table-cell", root.nsmap)[zaciatok+i]
-                row.remove(next_cell)
+                cells_to_remove.append(next_cell)
                 i += 1
             # ak sa v tom cell nenachadza table:covered-table-cell, ktora odstranuje ciary medzi spojenymi cellmi
             # tak ju mozme pridat. staci vsak len jedna, preto kontrolujeme ci tam ziadna nie je
@@ -79,6 +74,10 @@ def align_cells(den):
                 cell.append(etree.Element("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell"))
 
         zaciatok += 1
+
+    for cell in cells_to_remove:
+        row.remove(cell)
+
     save_changes(root)
 
 
