@@ -22,16 +22,16 @@ from lxml import etree
 
 
 def add_days_of_week_xml(root):
-    pondelok = etree.Element('pondelok')
-    utorok = etree.Element('utorok')
-    streda = etree.Element('streda')
-    stvrtok = etree.Element('stvrtok')
-    piatok = etree.Element('piatok')
-    root.append(pondelok)
-    root.append(utorok)
-    root.append(streda)
-    root.append(stvrtok)
-    root.append(piatok)
+    pon = etree.Element('pondelok')
+    uto = etree.Element('utorok')
+    ste = etree.Element('streda')
+    stv = etree.Element('stvrtok')
+    pia = etree.Element('piatok')
+    root.append(pon)
+    root.append(uto)
+    root.append(ste)
+    root.append(stv)
+    root.append(pia)
 
 
 def add_class_to_xml(root, clazz):
@@ -39,49 +39,47 @@ def add_class_to_xml(root, clazz):
     if clazz[6] is not None:
         print "Spracuvam " + clazz[6]
 
-    den = None
+    day = None
     # Keby chceme zmenit clazz[3] nepojde to lebo tuple sa neda zmenit
     den_string = clazz[3]
     if not clazz[3] is None:
         if den_string == u'štvrtok':
             den_string = 'stvrtok'
-        den = root.find(den_string)
+        day = root.find(den_string)
     else:
         if clazz[0] is not None:
-            print "***** Nepodarilo sa ziskat den pre hodinu: " + clazz[0] + " Rozvrh moze byt nekompletny alebo hodiny posunute *****"
+            print "Nepodarilo sa ziskat den pre " + clazz[0] + ". Rozvrh moze byt nekompletny alebo hodiny posunute"
         elif clazz[0] is None and clazz[6] is not None:
-            print "***** PRAZDNY ROZVRH *****" + clazz[6]
+            print "***** Prazdny rozvrh *****" + clazz[6]
         else:
-            print "***** Rozvrh ktory nema ani nadpis *****"
+            print "***** Rozvrhu chyba nadpis *****"
 
-    if den is not None:
+    if day is not None:
 
         if not clazz[0] is None:
             hodina = etree.Element('hodina')
             hodina.text = clazz[0]
-            den.append(hodina)
+            day.append(hodina)
 
         if not clazz[1] is None:
             vyucujuci = etree.Element('vyucujuci')
             vyucujuci.text = clazz[1]
-            den.append(vyucujuci)
+            day.append(vyucujuci)
 
         if not clazz[2] is None:
             ucebna = etree.Element('ucebna')
             ucebna.text = clazz[2]
-            den.append(ucebna)
+            day.append(ucebna)
 
         if not clazz[4] is None:
             zaciatok = etree.Element('zaciatok')
             zaciatok.text = clazz[4]
-            den.append(zaciatok)
+            day.append(zaciatok)
 
         if not clazz[5] is None:
             trvanie = etree.Element('trvanie')
             trvanie.text = clazz[5]
-            den.append(trvanie)
-
-    # root.append(den)
+            day.append(trvanie)
 
 
 def get_class_length(title):
@@ -92,69 +90,69 @@ def get_class_start(title):
     # title obsahuje nieco ako "* streda : 14-15 *" - potrebujem dostat len prve cislo
     # pretoze aka dlha hodina bude viem z ineho atributu (pozri funkciu get_lessons_of_class, colspan)
     # toto mi vrati pole obsahujuce ['streda', '14-15'], vezmem prvy index cize cisla 14-15
-    zacHod = title['title'].partition('*')[-1].rpartition('*')[0].replace(" ", "").split(':')[1]
+    zac_hod = title['title'].partition('*')[-1].rpartition('*')[0].replace(" ", "").split(':')[1]
 
     # 1 alebo 15 to je v poriadku
     # 1-2 a 9-10 -> v oboch pripadoch chcem len prve cislo (dlzka 3 a 4)
     # 12-13 -> tu chcem prve dve cisla (dlzka 5)
 
-    if len(zacHod) == 3 or len(zacHod) == 4:
-        return zacHod[0:1]
-    if len(zacHod) == 5:
-        return zacHod[0:2]
-    return zacHod
+    if len(zac_hod) == 3 or len(zac_hod) == 4:
+        return zac_hod[0:1]
+    if len(zac_hod) == 5:
+        return zac_hod[0:2]
+    return zac_hod
 
 
-def get_lessons_of_class(url):
+def get_lessons_of_class(url_class):
 
-    print "Ziskavam rozvrh z URL " + url
+    print "Ziskavam rozvrh z URL " + url_class
 
-    source = requests.get(url)
-    text = source.text
-    soup = BeautifulSoup(text, "html.parser")
+    src = requests.get(url_class)
+    txt = src.text
+    bsoup = BeautifulSoup(txt, "html.parser")
 
     predmety = []
     ucitelia = []
     ucebne = []
 
     dni = []
-    zacinaHod = []
-    pocHod = []
+    zacina_hod = []
+    poc_hod = []
 
-    nadpis = []
     # neni to bohvieako pekne ale budiz, v nultom indexe je nazov skoly, v prvom Triedy
-    nadpis.append(soup.find_all(("div", {'class': 'Nadpis'}))[1].text)
+    nadpis = [bsoup.find_all(("div", {'class': 'Nadpis'}))[1].text]
 
-    for predmet in soup.find_all("font", {'class': 'Predmet'}):
+    for predmet in bsoup.find_all("font", {'class': 'Predmet'}):
         if predmet.text == '':
             predmety.append('chyba nazov predmetu')
         else:
             predmety.append(predmet.text)
-    for ucitel in soup.find_all("font", {'class': 'Vyucujuci'}):
+    for ucitel in bsoup.find_all("font", {'class': 'Vyucujuci'}):
         if ucitel.text == '':
             ucitelia.append('chyba ucitel')
         else:
             ucitelia.append(ucitel.text)
-    for ucebna in soup.find_all("font", {'class': 'Ucebna'}):
+    for ucebna in bsoup.find_all("font", {'class': 'Ucebna'}):
         if ucebna.text == '':
             ucebne.append('chyba ucebna')
         else:
             ucebne.append(ucebna.text)
 
-    ciste_trka = soup.find_all("tr", {'class': False})
+    ciste_trka = bsoup.find_all("tr", {'class': False})
     ciste_trka = ciste_trka[1:-1]  # Vyhodime to trko ktore to obsahuje vsetko, to nepotrebujem
 
     for trko in ciste_trka:
         if trko != '\n' and trko.find("td", {'class': 'HlavickaDni'}) is not None:
                 hlavicka_dni = trko.find("td", {'class': 'HlavickaDni'})['title']
 
-                hodiny = trko.find("td", {'class': 'HlavickaDni'}).parent.find_all("td") #vsetky hodiny v ramci toho dna
+                # vsetky hodiny v ramci toho dna
+                hodiny = trko.find("td", {'class': 'HlavickaDni'}).parent.find_all("td")
                 # podla bgcolor viem ci je hodina alebo volnahodina
                 for hodinaInfo in hodiny:
                     if hodinaInfo.has_attr('bgcolor') or hodinaInfo.attrs['class'][0] == 'Hod':
-                        pocHod.append(get_class_length(hodinaInfo))
+                        poc_hod.append(get_class_length(hodinaInfo))
                         dni.append(hlavicka_dni)
-                        zacinaHod.append(get_class_start(hodinaInfo))
+                        zacina_hod.append(get_class_start(hodinaInfo))
 
         # Ked je dve a viac predmetov v tom istom case a tom istom dni, tak ta druha alebo tretia
         # je mimo hlavneho <tr> tagu v ktorom sa nachadza aj nazov dna, a preto treba hladat
@@ -162,9 +160,9 @@ def get_lessons_of_class(url):
         elif trko != '\n' and trko.find_all("td") is not None:
             for hodinaMimoTr in trko.find_all("td"):
                 if hodinaMimoTr.has_attr('bgcolor') or hodinaInfo.attrs['class'][0] == 'Hod':
-                    pocHod.append(get_class_length(hodinaMimoTr))
+                    poc_hod.append(get_class_length(hodinaMimoTr))
                     dni.append(hlavicka_dni)
-                    zacinaHod.append(get_class_start(hodinaMimoTr))
+                    zacina_hod.append(get_class_start(hodinaMimoTr))
     # Ak aj ucebna alebo meno vyucujuceho chyba, dlzka vsetkych zoznamov bude tak ci tak rovnaka
     # avsak v pripade "Nadpis", ten bude vzdy len jeden, preto musime pouzit "izip_longest"
     # ktory zo zoznamu kratsej dlzky, spravi dlhsi a doplni tam "None". keby to nespravim, kazdy
@@ -175,9 +173,9 @@ def get_lessons_of_class(url):
     # hodiny sa mozu posunut a byt v nespravnych dnoch a mat zle ucebne
     if u'***' in predmety:
         predmety.remove(u'***')
-    mojList = list(itertools.izip_longest(predmety, ucitelia, ucebne, dni, zacinaHod, pocHod, nadpis))
+    moj_list = list(itertools.izip_longest(predmety, ucitelia, ucebne, dni, zacina_hod, poc_hod, nadpis))
 
-    return mojList
+    return moj_list
 
 
 url = "http://www.pdf.umb.sk/~jsedliak/Public/"
@@ -199,9 +197,11 @@ for link in soup.find_all("a"):
 # vyhodi sa prvy link ktory neobsahuje konkretnu triedu, ale sablonu pre vsetky triedy
 urls = urls[1:-1]
 
-cele_rozvrhy_tried = []
-#for mojaUrl in urls:
-cele_rozvrhy_tried.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm")) #TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
+# TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
+cele_rozvrhy_tried = [get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm")]
+# cele_rozvrhy_tried = []
+# for mojaUrl in urls:
+# cele_rozvrhy_tried.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm"))
 
 # spravime si zlozku na rozvrhy
 try:
@@ -211,14 +211,14 @@ except OSError:
 
 for rozvrh_jednej_triedy in cele_rozvrhy_tried:
     trieda_nazov = rozvrh_jednej_triedy[0][6]  # 6ty index obsahuje meno triedy ktorej patri rozvrh
-    root = etree.Element("rozvrh")
-    root.attrib['Trieda'] = trieda_nazov
-    add_days_of_week_xml(root)
+    rozvrh = etree.Element("rozvrh")
+    rozvrh.attrib['Trieda'] = trieda_nazov
+    add_days_of_week_xml(rozvrh)
 
     vyuc_hodiny = []
 
     for jedna_hodina_rozvrhu in rozvrh_jednej_triedy:
-        add_class_to_xml(root, jedna_hodina_rozvrhu)
+        add_class_to_xml(rozvrh, jedna_hodina_rozvrhu)
         vyuc_hodiny.append(SchoolClass.make_class(jedna_hodina_rozvrhu[0],
                                                   jedna_hodina_rozvrhu[1],
                                                   jedna_hodina_rozvrhu[2],
@@ -268,8 +268,8 @@ for rozvrh_jednej_triedy in cele_rozvrhy_tried:
     ODTCreator.align_cells('piatok')
 
     f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
-    f.write(etree.tostring(root, pretty_print=True))
+    f.write(etree.tostring(rozvrh, pretty_print=True))
     f.close()
 
-# TODO Won't work in Windows
+# Won't work in Windows
 subprocess.call(['./packNrun.sh'])

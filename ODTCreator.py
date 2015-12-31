@@ -10,15 +10,10 @@ def open_base_file():
     return etree.fromstring(xml_data)
 
 
-def save_changes(root):
+def save_changes(xml_content):
     file_output = open('content.xml', 'w')
-    file_output.write(etree.tostring(root, pretty_print=True))
+    file_output.write(etree.tostring(xml_content, pretty_print=True))
     file_output.close()
-
-
-# prida title tabulke (nazov triedy)
-def add_class_title(title):
-    pass  # TODO
 
 root = open_base_file()
 
@@ -63,7 +58,8 @@ def align_cells(den):
         if trvanie is not None and int(trvanie) > 1:
 
             # odstranujeme cells podla toho cez kolko hodin sa vyucovanie natiahne
-            while i < int(trvanie) and len(cell.findall("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell")) == 0:
+            while i < int(trvanie) \
+                    and len(cell.findall("{urn:oasis:names:tc:opendocument:xmlns:table:1.0}covered-table-cell")) == 0:
                 next_cell = row.findall("table:table-cell", root.nsmap)[zaciatok+i]
                 cells_to_remove.append(next_cell)
                 i += 1
