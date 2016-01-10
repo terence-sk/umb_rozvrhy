@@ -20,6 +20,14 @@ import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 
+# URL Kde sa nachadzaju rozvrhy
+url = "http://www.pdf.umb.sk/~jsedliak/Public/"
+
+# "konstanty" ktore rozhoduju o tom ake XMLka sa generuju
+XML_ONLY = 0
+ODT_ONLY = 1
+BOTH_XML_ODT = 2
+
 
 def add_days_of_week_xml(root):
     pon = etree.Element('pondelok')
@@ -178,98 +186,112 @@ def get_lessons_of_class(url_class):
     return moj_list
 
 
-url = "http://www.pdf.umb.sk/~jsedliak/Public/"
-# tento string je v kazdom linku pre konkretnu triedu, nespracuvame teda ucitelske rozvhy
-rozvrh_tried = "rozvrh_tr"
-urls = []
-
-source = requests.get(url)
-text = source.text
-soup = BeautifulSoup(text, "html.parser")
-
 # Zobere vsetky linky a pozrie sa ci link obsahuje "rozvrh_tr", aby sa spracovali len rozvrhy tried
-for link in soup.find_all("a"):
-    toAppend = link.text
-    if rozvrh_tried in toAppend:
-        final_url = url + toAppend
-        urls.append(final_url)
+def remove_non_class_timetables(soup_links):
+    modified_urls = []
 
-# vyhodi sa prvy link ktory neobsahuje konkretnu triedu, ale sablonu pre vsetky triedy
-urls = urls[1:-1]
+    for link in soup_links.find_all("a"):
+        to_append = link.text
+        if "rozvrh_tr" in to_append:
+            final_url = url + to_append
+            modified_urls.append(final_url)
 
-# TODO naspat zmeny ked uz nebudem chciet generovat len jeden rozvrh
-cele_rozvrhy_tried = [get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm")]
-# cele_rozvrhy_tried = []
-# for mojaUrl in urls:
-# cele_rozvrhy_tried.append(get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2726.htm"))
+    return modified_urls
 
-# spravime si zlozku na rozvrhy
-try:
-    os.makedirs('rozvrhy')
-except OSError:
-    pass  # ak uz zlozka existuje da error, ten ignorujeme, chceme zapisat do zlozky
 
-for rozvrh_jednej_triedy in cele_rozvrhy_tried:
-    trieda_nazov = rozvrh_jednej_triedy[0][6]  # 6ty index obsahuje meno triedy ktorej patri rozvrh
-    rozvrh = etree.Element("rozvrh")
-    rozvrh.attrib['Trieda'] = trieda_nazov
-    add_days_of_week_xml(rozvrh)
+def get_urls_to_process():
+    source = requests.get(url)
+    text = source.text
+    soup = BeautifulSoup(text, "html.parser")
 
-    vyuc_hodiny = []
+    urls = remove_non_class_timetables(soup)
 
-    for jedna_hodina_rozvrhu in rozvrh_jednej_triedy:
-        add_class_to_xml(rozvrh, jedna_hodina_rozvrhu)
-        vyuc_hodiny.append(SchoolClass.make_class(jedna_hodina_rozvrhu[0],
-                                                  jedna_hodina_rozvrhu[1],
-                                                  jedna_hodina_rozvrhu[2],
-                                                  jedna_hodina_rozvrhu[3],
-                                                  jedna_hodina_rozvrhu[4],
-                                                  jedna_hodina_rozvrhu[5]))
+    # vyhodi sa prvy link ktory neobsahuje konkretnu triedu, ale sablonu pre vsetky triedy
+    urls = urls[1:-1]
+    return urls
 
-    pondelok = []
-    utorok = []
-    streda = []
-    stvrtok = []
-    piatok = []
 
-    for objekt_hodina in vyuc_hodiny:
-        if objekt_hodina.den == 'pondelok':
-            pondelok.append(objekt_hodina)
-        if objekt_hodina.den == 'utorok':
-            utorok.append(objekt_hodina)
-        if objekt_hodina.den == 'streda':
-            streda.append(objekt_hodina)
-        if objekt_hodina.den == u'štvrtok':
-            stvrtok.append(objekt_hodina)
-        if objekt_hodina.den == 'piatok':
-            piatok.append(objekt_hodina)
+def make_folder():
+    # spravime si zlozku na rozvrhy
+    try:
+        os.makedirs('rozvrhy')
+    except OSError:
+        pass  # ak uz zlozka existuje da error, ten ignorujeme, chceme zapisat do zlozky
 
-    pondelok.sort(key=attrgetter('zaciatok'))
-    utorok.sort(key=attrgetter('zaciatok'))
-    streda.sort(key=attrgetter('zaciatok'))
-    stvrtok.sort(key=attrgetter('zaciatok'))
-    piatok.sort(key=attrgetter('zaciatok'))
 
-    zoznam_dni = [pondelok, utorok, streda, stvrtok, piatok]
+def generate_xmls(generate_xml):
 
-    for den in zoznam_dni:
-        for objekt_hodina in den:
-            ODTCreator.add_values(objekt_hodina.hodina,
-                                  objekt_hodina.vyuc,
-                                  objekt_hodina.ucebna,
-                                  objekt_hodina.den,
-                                  objekt_hodina.zaciatok,
-                                  objekt_hodina.trvanie)
+    if generate_xml == XML_ONLY or generate_xml == BOTH_XML_ODT:
+        cele_rozvrhy_tried = [get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2985.htm")]
+        #cele_rozvrhy_tried = []
+        #for url_to_process in get_urls_to_process():
+        #    cele_rozvrhy_tried.append(get_lessons_of_class(url_to_process))
 
-    ODTCreator.align_cells('pondelok')
-    ODTCreator.align_cells('utorok')
-    ODTCreator.align_cells('streda')
-    ODTCreator.align_cells('stvrtok')
-    ODTCreator.align_cells('piatok')
+        for rozvrh_jednej_triedy in cele_rozvrhy_tried:
+            trieda_nazov = rozvrh_jednej_triedy[0][6]  # 6ty index obsahuje meno triedy ktorej patri rozvrh
+            rozvrh = etree.Element("rozvrh")
+            rozvrh.attrib['Trieda'] = trieda_nazov
+            add_days_of_week_xml(rozvrh)
 
-    f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
-    f.write(etree.tostring(rozvrh, pretty_print=True))
-    f.close()
+            vyuc_hodiny = []
 
-# Won't work in Windows
-subprocess.call(['./packNrun.sh'])
+            for jedna_hodina_rozvrhu in rozvrh_jednej_triedy:
+                add_class_to_xml(rozvrh, jedna_hodina_rozvrhu)
+                vyuc_hodiny.append(SchoolClass.make_class(jedna_hodina_rozvrhu[0],
+                                                          jedna_hodina_rozvrhu[1],
+                                                          jedna_hodina_rozvrhu[2],
+                                                          jedna_hodina_rozvrhu[3],
+                                                          jedna_hodina_rozvrhu[4],
+                                                          jedna_hodina_rozvrhu[5]))
+
+            pondelok = []
+            utorok = []
+            streda = []
+            stvrtok = []
+            piatok = []
+
+            for objekt_hodina in vyuc_hodiny:
+                if objekt_hodina.den == 'pondelok':
+                    pondelok.append(objekt_hodina)
+                if objekt_hodina.den == 'utorok':
+                    utorok.append(objekt_hodina)
+                if objekt_hodina.den == 'streda':
+                    streda.append(objekt_hodina)
+                if objekt_hodina.den == u'štvrtok':
+                    stvrtok.append(objekt_hodina)
+                if objekt_hodina.den == 'piatok':
+                    piatok.append(objekt_hodina)
+
+            pondelok.sort(key=attrgetter('zaciatok'))
+            utorok.sort(key=attrgetter('zaciatok'))
+            streda.sort(key=attrgetter('zaciatok'))
+            stvrtok.sort(key=attrgetter('zaciatok'))
+            piatok.sort(key=attrgetter('zaciatok'))
+
+        if generate_xml == ODT_ONLY or generate_xml == BOTH_XML_ODT:
+
+            zoznam_dni = [pondelok, utorok, streda, stvrtok, piatok]
+
+            for den in zoznam_dni:
+                for objekt_hodina in den:
+                    ODTCreator.add_values(objekt_hodina.hodina,
+                                          objekt_hodina.vyuc,
+                                          objekt_hodina.ucebna,
+                                          objekt_hodina.den,
+                                          objekt_hodina.zaciatok,
+                                          objekt_hodina.trvanie)
+
+            ODTCreator.align_cells('pondelok')
+            ODTCreator.align_cells('utorok')
+            ODTCreator.align_cells('streda')
+            ODTCreator.align_cells('stvrtok')
+            ODTCreator.align_cells('piatok')
+
+        f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
+        f.write(etree.tostring(rozvrh, pretty_print=True))
+        f.close()
+
+    # Won't work in Windows
+    subprocess.call(['./packNrun.sh'])
+
+generate_xmls(BOTH_XML_ODT)
