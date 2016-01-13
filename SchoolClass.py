@@ -16,5 +16,8 @@ class SchoolClass(object):
 
 
 def make_class(hodina, vyuc, ucebna, den, zaciatok, trvanie):
-    sc = SchoolClass(hodina, vyuc, ucebna, den, int(zaciatok), trvanie)
+    if zaciatok is not None:
+        sc = SchoolClass(hodina, vyuc, ucebna, den, int(zaciatok), trvanie)
+    else:
+        sc = SchoolClass(hodina, vyuc, ucebna, den, zaciatok, trvanie)
     return sc

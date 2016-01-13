@@ -113,6 +113,7 @@ def get_class_start(title):
 
 def get_lessons_of_class(url_class):
 
+    global hlavicka_dni
     print "Ziskavam rozvrh z URL " + url_class
 
     src = requests.get(url_class)
@@ -167,7 +168,7 @@ def get_lessons_of_class(url_class):
         # dalsie hodiny mimo tr tagu.
         elif trko != '\n' and trko.find_all("td") is not None:
             for hodinaMimoTr in trko.find_all("td"):
-                if hodinaMimoTr.has_attr('bgcolor') or hodinaInfo.attrs['class'][0] == 'Hod':
+                if hodinaMimoTr.has_attr('bgcolor') or hodinaMimoTr.attrs['class'][0] == 'Hod':
                     poc_hod.append(get_class_length(hodinaMimoTr))
                     dni.append(hlavicka_dni)
                     zacina_hod.append(get_class_start(hodinaMimoTr))
@@ -181,6 +182,7 @@ def get_lessons_of_class(url_class):
     # hodiny sa mozu posunut a byt v nespravnych dnoch a mat zle ucebne
     if u'***' in predmety:
         predmety.remove(u'***')
+        print "Predmet obsahoval dalsie hodiny ktore sa neda spracovat kvoli nespravnym datam"
     moj_list = list(itertools.izip_longest(predmety, ucitelia, ucebne, dni, zacina_hod, poc_hod, nadpis))
 
     return moj_list
@@ -221,16 +223,20 @@ def make_folder():
 
 def generate_xmls(generate_xml):
 
+    make_folder()
+    global pondelok, utorok, streda, stvrtok, piatok, rozvrh, trieda_nazov
     if generate_xml == XML_ONLY or generate_xml == BOTH_XML_ODT:
-        cele_rozvrhy_tried = [get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2985.htm")]
-        #cele_rozvrhy_tried = []
-        #for url_to_process in get_urls_to_process():
-        #    cele_rozvrhy_tried.append(get_lessons_of_class(url_to_process))
+        # cele_rozvrhy_tried = [get_lessons_of_class("http://www.pdf.umb.sk/~jsedliak/Public/rozvrh_tr2815.htm")]
+        cele_rozvrhy_tried = []
+        for url_to_process in get_urls_to_process():
+            cele_rozvrhy_tried.append(get_lessons_of_class(url_to_process))
 
         for rozvrh_jednej_triedy in cele_rozvrhy_tried:
+
             trieda_nazov = rozvrh_jednej_triedy[0][6]  # 6ty index obsahuje meno triedy ktorej patri rozvrh
             rozvrh = etree.Element("rozvrh")
             rozvrh.attrib['Trieda'] = trieda_nazov
+
             add_days_of_week_xml(rozvrh)
 
             vyuc_hodiny = []
@@ -268,6 +274,10 @@ def generate_xmls(generate_xml):
             stvrtok.sort(key=attrgetter('zaciatok'))
             piatok.sort(key=attrgetter('zaciatok'))
 
+            f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
+            f.write(etree.tostring(rozvrh, pretty_print=True))
+            f.close()
+
         if generate_xml == ODT_ONLY or generate_xml == BOTH_XML_ODT:
 
             zoznam_dni = [pondelok, utorok, streda, stvrtok, piatok]
@@ -287,11 +297,7 @@ def generate_xmls(generate_xml):
             ODTCreator.align_cells('stvrtok')
             ODTCreator.align_cells('piatok')
 
-        f = open('rozvrhy/' + trieda_nazov + '.xml', 'w')
-        f.write(etree.tostring(rozvrh, pretty_print=True))
-        f.close()
-
     # Won't work in Windows
-    subprocess.call(['./packNrun.sh'])
+    # subprocess.call(['./packNrun.sh'])
 
-generate_xmls(BOTH_XML_ODT)
+generate_xmls(XML_ONLY)
